@@ -8,6 +8,8 @@ See [example.clj](https://github.com/thatismatt/gudu-example/blob/master/src/gud
 
 ## Run the web app
 
+NOTE: Until gudu is published, you'll need to clone it and lein install it to your local repository.
+
 Clone the repository and then run with:
 
     lein ring server
