@@ -1,10 +1,10 @@
-# gudu example
+# gudu examples
 
-This is an example usage of the [gudu](https://github.com/thatismatt/gudu) routing library for ring.
+This is a set of example usages of the [gudu](https://github.com/thatismatt/gudu) routing library for ring.
 
 ## Show me the code
 
-See [example.clj](https://github.com/thatismatt/gudu-example/blob/master/src/gudu_example/core.clj).
+See [blog.clj](https://github.com/thatismatt/gudu-examples/blob/master/src/gudu_examples/blog.clj).
 
 ## Run the web app
 
