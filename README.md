@@ -16,6 +16,6 @@ Clone the repository and then run with:
 
 ## License
 
-Copyright © 2013 FIXME
+Copyright © 2013 Matt Lee
 
 Distributed under the Eclipse Public License, the same as Clojure.
