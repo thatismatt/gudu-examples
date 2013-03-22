@@ -1,4 +1,4 @@
-(ns gudu-example.core
+(ns gudu-examples.blog
   (:require [gudu])
   (:use [gudu.middleware]
         [ring.util.response]
@@ -31,7 +31,7 @@
    (html5
     [:html
      [:head
-      [:title "gudu example"]
+      [:title "gudu examples"]
       [:style (clojure.string/join
                " "
                ["ul { display: block; overflow: hidden; padding: 0; }"
@@ -39,7 +39,7 @@
                 ".wrapper { margin: 0 auto; width: 500px; }"])]]
      [:body
       [:div.wrapper
-       [:h1 "gudu example"]
+       [:h1 "gudu examples"]
        [:ul
         [:li (link-to (gu :home) "Home")]
         [:li (link-to (gu :blog :latest) "Latest Posts")]]
