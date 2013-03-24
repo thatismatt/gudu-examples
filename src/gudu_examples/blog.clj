@@ -1,16 +1,17 @@
 (ns gudu-examples.blog
   (:require [gudu])
-  (:use [gudu.middleware]
+  (:use [gudu.core]
+        [gudu.middleware]
         [ring.util.response]
         [hiccup.core]
         [hiccup.page]
         [hiccup.element]))
 
 (def routes
-  {:home []
+  {:home root
    :blog ["blog"
-          {:latest []
-           :post   [gudu/string-segment]
+          {:latest root
+           :post   string-segment
            ;; TODO
            ;;:archive [gudu/integer-segment  ;; year
            ;;          gudu/integer-segment] ;; month
