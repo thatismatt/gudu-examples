@@ -1,23 +1,24 @@
 (ns gudu-examples.blog
-  (:require [gudu])
-  (:use [gudu.core]
-        [gudu.middleware]
-        [ring.util.response]
-        [hiccup.core]
-        [hiccup.page]
-        [hiccup.element]))
+  (:require [clojure.string :as str]
+            [gudu.core :as gd]
+            [gudu.middleware :as gdm]
+            [gudu.segment :as gds]
+            [ring.util.response :as response]
+            [hiccup.core :as h]
+            [hiccup.page :as hp]
+            [hiccup.element :as he]))
 
 (def routes
-  {:home root
+  {:home gds/root
    :blog ["blog"
-          {:latest root
-           :post   string-segment
+          {:latest gds/root
+           :post   gds/string
            ;; TODO
            ;;:archive [gudu/integer-segment  ;; year
            ;;          gudu/integer-segment] ;; month
            }]})
 
-(def gu (gudu/gu routes))
+(def gu (gd/gu routes))
 
 (def posts
   {"first-post"   {:title "My First Post"
@@ -28,12 +29,12 @@
                    :body "This one is the most enlightening."}})
 
 (defn page [title body]
-  (html
-   (html5
+  (h/html
+   (hp/html5
     [:html
      [:head
       [:title "gudu examples"]
-      [:style (clojure.string/join
+      [:style (str/join
                " "
                ["ul { display: block; overflow: hidden; padding: 0; }"
                 "li { float: left; margin: 0 5px; list-style: none; }"
@@ -42,34 +43,34 @@
       [:div.wrapper
        [:h1 "gudu examples"]
        [:ul
-        [:li (link-to (gu :home) "Home")]
-        [:li (link-to (gu :blog :latest) "Latest Posts")]]
-       (if title [:h2 title])
+        [:li (he/link-to (gu :home) "Home")]
+        [:li (he/link-to (gu :blog :latest) "Latest Posts")]]
+       (when title [:h2 title])
        [:div body]]]])))
 
 (defn ok-html [body]
-  (-> (response body)
-      (content-type "text/html")))
+  (-> (response/response body)
+      (response/content-type "text/html")))
 
 (def ok-page (comp ok-html page))
 
-(defn home [req]
+(defn home [_req]
   (ok-page "Welcome to this gudu example" "This is my blog."))
 
-(defn latest-posts [req]
+(defn latest-posts [_req]
   (ok-page
    "Welcome to my blog"
-   (map (fn [[slug post]] [:div (link-to (gu :blog :post slug) (post :title))]) posts)))
+   (map (fn [[slug post]] [:div (he/link-to (gu :blog :post slug) (post :title))]) posts)))
 
 (defn blog-archive [slug]
-  (fn [req]
-    (if-let [post (posts slug)]
+  (fn [_req]
+    (when-let [post (posts slug)]
       (ok-page (post :title) (post :body)))))
 
-(defn missing [req]
+(defn missing [_req]
   (-> (page "Not Found" "That page is missing.")
-      not-found
-      (content-type "text/html")))
+      response/not-found
+      (response/content-type "text/html")))
 
 (defn get-handler [route]
   (let [[ps [arg]] (split-at 2 route)]
@@ -80,6 +81,5 @@
      ps)))
 
 (def app
-  (-> (router get-handler routes)
-      (wrap-route routes)
-      ((fn [h] (fn [req] (or (h req) (missing req)))))))
+  (-> (gdm/router get-handler missing)
+      (gdm/wrap-route routes)))
